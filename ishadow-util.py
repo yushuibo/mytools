@@ -1,0 +1,130 @@
+#!/usr/bin/env python
+# -*- coding=UTF-8 -*-
+
+'''
+@ Author: shy
+@ Email: yushuibo@ebupt.com / hengchen2005@gmail.com
+@ Version: v1.0
+@ Description: -
+@ Since: 2020/4/13 13:48
+'''
+
+import re
+import sys
+import base64
+
+import requests
+import AdvancedHTMLParser
+from requests import ConnectionError
+
+shadowrocket_file = 'shadowrocket.txt'
+shadowsocket_file = 'shadowsocket.txt'
+
+url = 'https://my.ishadowx.biz/'
+hearders = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+}
+
+
+def get_ishadow_payload():
+    print('Try to open url {}...'.format(url))
+    try:
+        resp = requests.get(url, headers=hearders)
+    except ConnectionError:
+        print("Open url failed, abort!")
+        sys.exit(-1)
+
+    print("Starting parser response...")
+    html = resp.text
+    parser = AdvancedHTMLParser.AdvancedHTMLParser()
+    parser.parseStr(html)
+    tags = parser.getElementsByClassName('hover-text').getElementsByXPath("//div/h4")
+
+    ips = []
+    ports = []
+    passwds = []
+    methods = []
+    vmess_payloads = []
+    for tag in tags:
+        if not tag.hasChildNodes():
+            methods.append(tag.innerText.split(':')[1].strip())
+        else:
+            for child in tag.getChildren():
+                if not child.getAttribute('id'):
+                    continue
+
+                tag_id = str(child.getAttribute('id'))
+                if re.match(r'ip.*', tag_id):
+                    ips.append(child.innerText.strip())
+                elif re.match(r'port.*', tag_id):
+                    ports.append(child.innerText.strip())
+                elif re.match(r'pw.*', tag_id):
+                    passwds.append(child.innerText.strip())
+                elif re.match(r'url.*', tag_id):
+                    vmess_payloads.append(
+                            child.getAttribute('data-clipboard-text').strip())
+                else:
+                    pass
+
+    ss_payloads = zip(ips, methods, ports, passwds)
+
+    print('Got ss payloads:')
+    for payload in ss_payloads:
+        print('\tHost={}, Method={}, Port={}, Passwd={}'.format(*payload))
+
+    print('Got vmess payloads:')
+    for payload in vmess_payloads:
+        print('\tURL={}'.format(payload))
+
+    print('Got ishadow payload seccessfully.')
+
+    return ss_payloads, vmess_payloads
+
+
+def builder(ss_payloads, vmess_payloads):
+    print('Starting build base64 url...')
+    ss_servers = []
+    sr_servers = []
+    for payload in ss_payloads:
+        host, method, port, passwd = payload
+
+        ss_raw = '{method}:{passwd}@{ip}:{port}'.format(method=method, passwd=passwd, ip=host, port=port)
+
+        # a.isxb.top:19291:origin:aes-256-gcm:plain:aXN4Lnl0LTg3ODIxNzU0/?obfsparam=&group=RGVmYXVsdCBHcm91cA
+        sr_raw = '{ip}:{port}:origin:{method}:palin:{passwd}/?obfsparam=&group={group}'.format(
+                method=method,
+                passwd=base64.b64encode(passwd),
+                ip=host,
+                port=port,
+                group=base64.b64encode('iShadow'))
+
+        ss_encoded = base64.b64encode(ss_raw)
+        sr_encoded = base64.b64encode(sr_raw)
+
+        ss_servers.append('ss://{}#{}'.format(ss_encoded, host))
+        sr_servers.append('ssr://{}'.format(sr_encoded))
+
+    ss_servers.extend(vmess_payloads)
+    return ss_servers, sr_servers
+
+
+def gen_file(ss_servers, sr_servers):
+    print('Starting generate subcribe files...')
+    with open(shadowrocket_file, 'w') as fd:
+        fd.write(base64.b64encode('\n'.join(ss_servers)))
+        fd.flush()
+
+    with open(shadowsocket_file, 'w') as fd:
+        fd.write(base64.b64encode('\n'.join(sr_servers)))
+        fd.flush()
+
+
+if __name__ == '__main__':
+    ss_payloads, vmess_payloads = get_ishadow_payload();
+    ss_servers, sr_servers = builder(ss_payloads, vmess_payloads)
+    gen_file(ss_servers, sr_servers)
+    print("Subcribe generate done!")
+    print('Subcribe urls:')
+    print('\thttps://raw.githubusercontent.com/yushuibo/ishadow/master/shadowrocket.txt')
+    print('\thttps://raw.githubusercontent.com/yushuibo/ishadow/master/shadowsocket.txt')
