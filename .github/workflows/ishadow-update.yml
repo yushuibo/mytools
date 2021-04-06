@@ -28,12 +28,14 @@ jobs:
       # 执行仓库中的脚本文件
       - name: run update
         run: python -u ./ishadow-util.py
-      - name: push
+      - name: commit
         run: |
-          pwd
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
           git add -A
-          git commit -m "github action auto updated"
-          git push origin main
+          git commit -m "github action auto updated" -a
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
