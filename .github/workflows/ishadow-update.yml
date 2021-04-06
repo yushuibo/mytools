@@ -35,5 +35,5 @@ jobs:
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
           git add -A
-          git commit -m \"github action update at $(date +"%F %H:%M:%S")\"
+          git commit -m "github action auto updated"
           git push origin main
