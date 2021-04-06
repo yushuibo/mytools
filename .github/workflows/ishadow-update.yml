@@ -30,8 +30,8 @@ jobs:
         run: python -u ./ishadow-util.py
       - name: push
         run: |
-          git config --global user.email "hengchen2005@gmial.com“ && \
-          git config --global user.name "yushuibo" && \
-          git add -A && \
-          git commit -m "$(date)" && \
+          git config --global user.email "hengchen2005@gmial.com“
+          git config --global user.name "yushuibo"
+          git add -A
+          git commit -m "$(date)"
           git push origin main
