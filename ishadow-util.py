@@ -112,11 +112,11 @@ def builder(ss_payloads, vmess_payloads):
 def gen_file(ss_servers, sr_servers):
     print('Starting generate subcribe files...')
     with open(shadowrocket_file, 'w') as fd:
-        fd.write(base64.b64encode('\n'.join(ss_servers)))
+        fd.write(base64.b64encode('\n'.join(ss_servers).encode()).decode())
         fd.flush()
 
     with open(shadowsocket_file, 'w') as fd:
-        fd.write(base64.b64encode('\n'.join(sr_servers).encode()))
+        fd.write(base64.b64encode('\n'.join(sr_servers).encode()).decode())
         fd.flush()
 
 
