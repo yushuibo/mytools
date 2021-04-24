@@ -48,7 +48,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          directory: /home/runner/work/fish-payload
+          directory: /home/runner/work/mytools/mytools/fish-payload
           repository: yushuibo/fish-payload
       - name: sync to gitee
         uses: wearerequired/git-mirror-action@master
