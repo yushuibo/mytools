@@ -18,7 +18,7 @@ import AdvancedHTMLParser
 from requests import ConnectionError
 
 servers = []
-payloads_prefix_name = 'payloads'
+payloads = 'payloads.txt'
 
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
@@ -88,20 +88,6 @@ def get_ishadow_payload():
 
     ss_payloads = zip(ips, methods, ports, passwds)
 
-    print('Got ss payloads:')
-    for payload in ss_payloads:
-        print('\tHost={}, Method={}, Port={}, Passwd={}'.format(*payload))
-
-    print('Got vmess payloads:')
-    for payload in vmess_payloads:
-        print('\tURL={}'.format(payload))
-
-    print('Got ishadow payload successfully.')
-
-    return ss_payloads, vmess_payloads
-
-
-def builder(ss_payloads, vmess_payloads):
     print('Starting build base64 url...')
     for payload in ss_payloads:
         host, method, port, passwd = payload
@@ -115,26 +101,23 @@ def builder(ss_payloads, vmess_payloads):
         ss_encoded = base64.b64encode(ss_raw)
         sr_encoded = base64.b64encode(sr_raw)
 
-        servers[0].append('ss://{}#{}'.format(ss_encoded, host))
-        servers[1].append('ssr://{}'.format(sr_encoded))
+        servers.append('ss://{}#{}'.format(ss_encoded, host))
+        servers.append('ssr://{}'.format(sr_encoded))
 
-    servers.append(vmess_payloads)
-    return servers
+    servers.extend(vmess_payloads)
 
 
 def gen_file(servers):
     print('Starting generate subcribe files...')
-    index = 1
-    for hosts in servers:
-        hosts = filter(lambda x: x, hosts)
-        with open('{}_00{}.txt'.format(payloads_prefix_name, index), 'w') as fd:
-            fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
-            fd.flush()
+    servers = filter(lambda x: x, servers)
+    with open(payloads, 'w') as fd:
+        fd.write(base64.b64encode('\n'.join(servers).encode()).decode())
+        fd.flush()
 
 
 if __name__ == '__main__':
     get_sssub_payload()
-    ss_payloads, vmess_payloads = get_ishadow_payload()
-    servers = builder(ss_payloads, vmess_payloads)
+    get_ishadow_payload()
+    print('All servers: {}'.format(servers))
     gen_file(servers)
-    print("Subcribe generate done!")
+    print('Subcribe generate done!')
