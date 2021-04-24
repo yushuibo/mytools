@@ -31,7 +31,7 @@ jobs:
       - name: commit
         run: |
           pwd
-          cd ../../fish-payload
+          cd fish-payload
           pwd
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
