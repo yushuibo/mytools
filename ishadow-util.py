@@ -18,8 +18,7 @@ import AdvancedHTMLParser
 from requests import ConnectionError
 
 servers = []
-
-payloads_file = 'payloads.txt'
+payloads_prefix_name = 'payloads'
 
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
@@ -34,6 +33,7 @@ hearders = {
 
 def get_sssub_payload():
     for path in sssub_paths:
+        hosts = []
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
@@ -43,7 +43,8 @@ def get_sssub_payload():
             sys.exit(-1)
         print("Starting parser response...")
         raw_text = base64.b64decode(resp.text.encode())
-        servers.extend(raw_text.decode().split('\n'))
+        hosts.extend(raw_text.decode().split('\n'))
+        servers.append(hosts)
 
 
 def get_ishadow_payload():
@@ -114,19 +115,22 @@ def builder(ss_payloads, vmess_payloads):
         ss_encoded = base64.b64encode(ss_raw)
         sr_encoded = base64.b64encode(sr_raw)
 
-        servers.append('ss://{}#{}'.format(ss_encoded, host))
-        servers.append('ssr://{}'.format(sr_encoded))
+        servers[0].append('ss://{}#{}'.format(ss_encoded, host))
+        servers[1].append('ssr://{}'.format(sr_encoded))
 
-    servers.extend(vmess_payloads)
+    servers.append(vmess_payloads)
     return servers
 
 
 def gen_file(servers):
     print('Starting generate subcribe files...')
-    servers = filter(lambda x: x, servers)
-    with open(payloads_file, 'w') as fd:
-        fd.write(base64.b64encode('\n'.join(servers).encode()).decode())
-        fd.flush()
+    index = 1
+    for hosts in servers:
+        hosts = filter(lambda x: x, hosts)
+        with open('{}_00{}.txt'.format(payloads_prefix_name, index), 'w') as fd:
+            fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
+            fd.flush()
+        index += 1
 
 
 if __name__ == '__main__':
