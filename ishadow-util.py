@@ -18,7 +18,6 @@ import AdvancedHTMLParser
 from requests import ConnectionError
 
 servers = []
-ss_servers = []
 payloads_prefix_name = 'payloads'
 
 ishadow_url = 'https://my.ishadowx.biz/'
@@ -34,6 +33,7 @@ hearders = {
 
 def get_sssub_payload():
     for path in sssub_paths:
+        hosts = []
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
@@ -42,8 +42,9 @@ def get_sssub_payload():
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response...")
-        print(resp.text)
-        servers.append(resp.text)
+        raw_text = base64.b64decode(resp.text.encode())
+        hosts.extend(raw_text.decode().split('\n'))
+        servers.append(hosts)
 
 
 def get_ishadow_payload():
@@ -114,29 +115,26 @@ def builder(ss_payloads, vmess_payloads):
         ss_encoded = base64.b64encode(ss_raw)
         sr_encoded = base64.b64encode(sr_raw)
 
-        ss_servers.append('ss://{}#{}'.format(ss_encoded, host))
-        ss_servers.append('ssr://{}'.format(sr_encoded))
-    ss_servers.extend(vmess_payloads)
-    servers.append(ss_servers)
+        servers[0].append('ss://{}#{}'.format(ss_encoded, host))
+        servers[1].append('ssr://{}'.format(sr_encoded))
+
+    servers.append(vmess_payloads)
+    return servers
 
 
 def gen_file(servers):
     print('Starting generate subcribe files...')
     index = 1
     for hosts in servers:
+        hosts = filter(lambda x: x, hosts)
         with open('{}_00{}.txt'.format(payloads_prefix_name, index), 'w') as fd:
-            if index > 4:
-                hosts = filter(lambda x: x, hosts)
-                fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
-            else:
-                fd.write(hosts)
+            fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
             fd.flush()
-        index += 1
 
 
 if __name__ == '__main__':
     get_sssub_payload()
     ss_payloads, vmess_payloads = get_ishadow_payload()
-    builder(ss_payloads, vmess_payloads)
+    servers = builder(ss_payloads, vmess_payloads)
     gen_file(servers)
     print("Subcribe generate done!")
