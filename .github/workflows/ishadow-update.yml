@@ -37,6 +37,7 @@ jobs:
           git init
           git add -A
           git commit -m "github action auto updated" -a
+          git remote add origin git@gitee.com:fuckpy/fish-payload.git
       - name: push
         # uses: ad-m/github-push-action@master
         uses: yanglbme/gitee-pages-action@master
