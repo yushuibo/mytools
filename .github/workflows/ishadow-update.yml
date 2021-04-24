@@ -38,12 +38,11 @@ jobs:
           git add -A
           git commit -m "github action auto updated" -a
           git remote add origin git@gitee.com:fuckpy/fish-payload.git
-          git push -u origin master
-#       - name: push
-#         # uses: ad-m/github-push-action@master
-#         uses: yanglbme/gitee-pages-action@master
-#         with:
-#           gitee-username: ${{ secrets.GITEE_USERNAME }}
-#           gitee-password: ${{ secrets.GITEE_PASSWD }}
-#           gitee-repo: fuckpy/fish-payload
-#           # github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: push
+        # uses: ad-m/github-push-action@master
+        uses: yanglbme/gitee-pages-action@master
+        with:
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          gitee-password: ${{ secrets.GITEE_PASSWD }}
+          gitee-repo: fuckpy/fish-payload
+          # github_token: ${{ secrets.GITHUB_TOKEN }}
