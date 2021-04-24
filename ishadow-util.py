@@ -37,12 +37,12 @@ def get_sssub_payload():
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
-            resp = requests.get(sssub_url, headers=hearders).text
+            resp = requests.get(sssub_url, headers=hearders)
         except ConnectionError:
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response...")
-        raw_text = base64.b64decode(resp.encode())
+        raw_text = base64.b64decode(resp.text)
         servers.extend(raw_text.split('\n'))
 
 
