@@ -43,7 +43,6 @@ jobs:
           ls -l
           git add -A
           git commit -m "github action auto updated" -a
-          git push
           pwd
       - name: push
         uses: ad-m/github-push-action@master
