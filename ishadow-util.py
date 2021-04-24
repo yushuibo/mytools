@@ -43,8 +43,6 @@ def get_sssub_payload():
             sys.exit(-1)
         print("Starting parser response...")
         raw_text = base64.b64decode(resp.text.encode())
-        print(type(raw_text.decode()))
-        print(raw_text.decode())
         servers.extend(raw_text.decode().split('\n'))
 
 
@@ -125,7 +123,7 @@ def builder(ss_payloads, vmess_payloads):
 
 def gen_file(servers):
     print('Starting generate subcribe files...')
-
+    servers = filter(lambda x: x, servers)
     with open(payloads_file, 'w') as fd:
         fd.write(base64.b64encode('\n'.join(servers).encode()).decode())
         fd.flush()
