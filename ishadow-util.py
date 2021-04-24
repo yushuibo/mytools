@@ -18,7 +18,7 @@ from requests import ConnectionError
 
 servers = []
 
-payloads_file = 'payloads.txt'
+payloads_file = 'fish-payload/payloads.txt'
 
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
