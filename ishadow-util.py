@@ -19,7 +19,7 @@ from requests import ConnectionError
 
 servers = []
 
-doc_root = '../../fish-payload'
+doc_root = 'fish-payload'
 payloads_file = '{}/payloads.txt'.format(doc_root)
 
 ishadow_url = 'https://my.ishadowx.biz/'
