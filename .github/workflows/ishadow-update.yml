@@ -31,7 +31,7 @@ jobs:
       - name: commit
         run: |
           pwd
-          cd fish-payload
+          cd ../../fish-payload
           pwd
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
@@ -46,6 +46,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: ../../fish-payload
       - name: Sync to Gitee
         uses: wearerequired/git-mirror-action@master
         env:
@@ -53,3 +54,4 @@ jobs:
         with:
           source-repo: git@github.com:yushuibo/fish-payload.git
           destination-repo: git@gitee.com:fuckpy/fish-payload.git
+          branch: main
