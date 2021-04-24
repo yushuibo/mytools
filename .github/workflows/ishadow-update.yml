@@ -34,6 +34,7 @@ jobs:
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "fuckpy"
+          git init
           git add -A
           git commit -m "github action auto updated" -a
       - name: push
