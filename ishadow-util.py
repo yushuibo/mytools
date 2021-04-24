@@ -125,7 +125,7 @@ def gen_file(servers):
     index = 1
     for hosts in servers:
         with open('{}_00{}.txt'.format(payloads_prefix_name, index), 'w') as fd:
-            if index == 5:
+            if index > 4:
                 hosts = filter(lambda x: x, hosts)
                 fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
             else:
