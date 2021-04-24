@@ -42,6 +42,7 @@ def get_sssub_payload():
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response...")
+        print(resp.text)
         servers.append(resp.text)
 
 
@@ -117,7 +118,6 @@ def builder(ss_payloads, vmess_payloads):
         ss_servers.append('ssr://{}'.format(sr_encoded))
     ss_servers.extend(vmess_payloads)
     servers.append(ss_servers)
-    return servers
 
 
 def gen_file(servers):
@@ -137,6 +137,6 @@ def gen_file(servers):
 if __name__ == '__main__':
     get_sssub_payload()
     ss_payloads, vmess_payloads = get_ishadow_payload()
-    servers = builder(ss_payloads, vmess_payloads)
+    builder(ss_payloads, vmess_payloads)
     gen_file(servers)
     print("Subcribe generate done!")
