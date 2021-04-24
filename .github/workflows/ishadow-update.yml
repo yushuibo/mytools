@@ -30,7 +30,9 @@ jobs:
         run: python -u ./ishadow-util.py
       - name: commit
         run: |
+          pwd
           cd ../fish-payload
+          pwd
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
@@ -39,6 +41,7 @@ jobs:
           git commit -m "github action auto updated" -a
           git branch -M main
           git remote add origin git@github.com:yushuibo/fish-payload.git
+          pwd
       - name: push
         uses: ad-m/github-push-action@master
         with:
