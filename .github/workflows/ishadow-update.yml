@@ -33,16 +33,18 @@ jobs:
           cd ../fish-payload
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
-          git config --global user.name "fuckpy"
+          git config --global user.name "yushuibo"
           git init
           git add -A
           git commit -m "github action auto updated" -a
-          git remote add origin git@gitee.com:fuckpy/fish-payload.git
       - name: push
-        # uses: ad-m/github-push-action@master
-        uses: yanglbme/gitee-pages-action@master
+        uses: ad-m/github-push-action@master
         with:
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          gitee-password: ${{ secrets.GITEE_PASSWD }}
-          gitee-repo: fuckpy/fish-payload
-          # github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync to Gitee
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_RSA_PRIVATE_KEY }}
+        with:
+          source-repo: git@github.com:yushuibo/fish-payload.git
+          destination-repo: git@gitee.com:fuckpy/fish-payload.git
