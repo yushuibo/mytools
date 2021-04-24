@@ -45,7 +45,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: /home/runner/work/fish-payload
-          repository: git@github.com:yushuibo/fish-payload.git
+          repository: yushuibo/fish-payload
       - name: sync to gitee
         uses: wearerequired/git-mirror-action@master
         env:
