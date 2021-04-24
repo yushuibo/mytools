@@ -36,10 +36,9 @@ jobs:
           git clone https://github.com/yushuibo/fish-payload.git
           cd fish-payload/
           python -u ../mytools/mytools/ishadow-util.py
+          ls -l
           git add -A
           git commit -m "github action auto updated" -a
-          git branch -M main
-          git remote add origin git@github.com:yushuibo/fish-payload.git
           pwd
       - name: push
         uses: ad-m/github-push-action@master
