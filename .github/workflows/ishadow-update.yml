@@ -42,6 +42,6 @@ jobs:
         uses: yanglbme/gitee-pages-action@master
         with:
           gitee-username: ${{ secrets.GITEE_USERNAME }}
-          gitee-password: ${{ secrets.GITEE_PASS }}
+          input_gitee-password: ${{ secrets.GITEE_PASS }}
           gitee-repo: fuckpy/fish-payload
           # github_token: ${{ secrets.GITHUB_TOKEN }}
