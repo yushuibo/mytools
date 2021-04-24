@@ -1,3 +1,0 @@
-[submodule "fish-payload"]
-	path = fish-payload
-	url = git@github.com:yushuibo/fish-payload.git
