@@ -19,8 +19,7 @@ from requests import ConnectionError
 
 servers = []
 
-doc_root = '../../fish-payload'
-payloads_file = '{}/payloads.txt'.format(doc_root)
+payloads_file = 'payloads.txt'
 
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
@@ -124,8 +123,6 @@ def builder(ss_payloads, vmess_payloads):
 
 def gen_file(servers):
     print('Starting generate subcribe files...')
-    if not os.path.isdir(doc_root):
-        os.mkdir(doc_root)
 
     with open(payloads_file, 'w') as fd:
         fd.write(base64.b64encode('\n'.join(servers).encode()).decode())
