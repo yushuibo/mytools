@@ -30,26 +30,27 @@ jobs:
         with:
           repository: yushuibo/fish-payload
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: '../../fish-payload'
+          path: 'fish-payload'
       - name: run and commit
         run: |
           pwd
-          cd /home/runner/work/fish-payload
+          cd fish-payload
           pwd
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
-          python -u ../mytools/mytools/ishadow-util.py
+          python -u ../ishadow-util.py
           ls -l
           git add -A
           git commit -m "github action auto updated" -a
+          git push
           pwd
-      - name: push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          directory: /home/runner/work/fish-payload
-          repository: yushuibo/fish-payload
+#       - name: push
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           directory: /home/runner/work/fish-payload
+#           repository: yushuibo/fish-payload
       - name: sync to gitee
         uses: wearerequired/git-mirror-action@master
         env:
