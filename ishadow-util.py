@@ -42,7 +42,7 @@ def get_sssub_payload():
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response...")
-        raw_text = base64.decode(resp)
+        raw_text = base64.b64decode(resp)
         servers.extend(raw_text.split('\n'))
 
 
