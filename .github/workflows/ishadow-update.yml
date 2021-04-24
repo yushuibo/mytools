@@ -33,7 +33,7 @@ jobs:
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
-          git git pull git@github.com:yushuibo/fish-payload.git main
+          git pull git@github.com:yushuibo/fish-payload.git main
           cd fish-payload/
           python -u ../mytools/mytools/ishadow-util.py
           git add -A
