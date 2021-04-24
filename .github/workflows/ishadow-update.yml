@@ -32,10 +32,14 @@ jobs:
         run: |
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
-          git config --global user.name "yushuibo"
+          git config --global user.name "fuckpy"
           git add -A
           git commit -m "github action auto updated" -a
       - name: push
-        uses: ad-m/github-push-action@master
+        # uses: ad-m/github-push-action@master
+        uses: yanglbme/gitee-pages-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          gitee-password: ${{ secrets.GITEE_PASS }}
+          gitee-repo: fuckpy/fish-payload
+          # github_token: ${{ secrets.GITHUB_TOKEN }}
