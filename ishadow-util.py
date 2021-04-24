@@ -43,7 +43,9 @@ def get_sssub_payload():
             sys.exit(-1)
         print("Starting parser response...")
         raw_text = base64.b64decode(resp.text.encode())
-        servers.extend(raw_text.split('\n'))
+        print(type(raw_text.decode()))
+        print(raw_text.decode())
+        servers.extend(raw_text.decode().split('\n'))
 
 
 def get_ishadow_payload():
