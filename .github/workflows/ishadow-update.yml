@@ -45,12 +45,12 @@ jobs:
           git commit -m "github action auto updated" -a
           git push
           pwd
-#       - name: push
-#         uses: ad-m/github-push-action@master
-#         with:
-#           github_token: ${{ secrets.GITHUB_TOKEN }}
-#           directory: /home/runner/work/fish-payload
-#           repository: yushuibo/fish-payload
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: /home/runner/work/fish-payload
+          repository: yushuibo/fish-payload
       - name: sync to gitee
         uses: wearerequired/git-mirror-action@master
         env:
