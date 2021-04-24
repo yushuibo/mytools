@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding=UTF-8 -*-
-
 '''
 @ Author: shy
 @ Email: yushuibo@ebupt.com / hengchen2005@gmail.com
@@ -17,20 +16,39 @@ import requests
 import AdvancedHTMLParser
 from requests import ConnectionError
 
-shadowrocket_file = 'shadowrocket.txt'
-shadowsocket_file = 'shadowsocket.txt'
+servers = []
 
-url = 'https://my.ishadowx.biz/'
+payloads_file = 'payloads.txt'
+
+ishadow_url = 'https://my.ishadowx.biz/'
+sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
+sssub_paths = ['ss-sub', 'ssrsub', 'trojan', 'v2ray']
+
 hearders = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+    "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
 }
 
 
+def get_sssub_payload():
+    for path in sssub_paths:
+        sssub_url = '{}{}'.format(sssub_prefix_url, path)
+        print('Try to open url {}...'.format(sssub_url))
+        try:
+            resp = requests.get(sssub_url, headers=hearders)
+        except ConnectionError:
+            print("Open url failed, abort!")
+            sys.exit(-1)
+        print("Starting parser response...")
+        raw_text = base64.decode(resp)
+        servers.extend(raw_text.split('\n'))
+
+
 def get_ishadow_payload():
-    print('Try to open url {}...'.format(url))
+    print('Try to open url {}...'.format(ishadow_url))
     try:
-        resp = requests.get(url, headers=hearders)
+        resp = requests.get(ishadow_url, headers=hearders)
     except ConnectionError:
         print("Open url failed, abort!")
         sys.exit(-1)
@@ -62,8 +80,7 @@ def get_ishadow_payload():
                 elif re.match(r'pw.*', tag_id):
                     passwds.append(child.innerText.strip())
                 elif re.match(r'url.*', tag_id):
-                    vmess_payloads.append(
-                            child.getAttribute('data-clipboard-text').strip())
+                    vmess_payloads.append(child.getAttribute('data-clipboard-text').strip())
                 else:
                     pass
 
@@ -84,8 +101,6 @@ def get_ishadow_payload():
 
 def builder(ss_payloads, vmess_payloads):
     print('Starting build base64 url...')
-    ss_servers = []
-    sr_servers = []
     for payload in ss_payloads:
         host, method, port, passwd = payload
 
@@ -93,38 +108,27 @@ def builder(ss_payloads, vmess_payloads):
 
         # a.isxb.top:19291:origin:aes-256-gcm:plain:aXN4Lnl0LTg3ODIxNzU0/?obfsparam=&group=RGVmYXVsdCBHcm91cA
         sr_raw = '{ip}:{port}:origin:{method}:palin:{passwd}/?obfsparam=&group={group}'.format(
-                method=method,
-                passwd=base64.b64encode(passwd),
-                ip=host,
-                port=port,
-                group=base64.b64encode('iShadow'))
+            method=method, passwd=base64.b64encode(passwd), ip=host, port=port, group=base64.b64encode('iShadow'))
 
         ss_encoded = base64.b64encode(ss_raw)
         sr_encoded = base64.b64encode(sr_raw)
 
-        ss_servers.append('ss://{}#{}'.format(ss_encoded, host))
-        sr_servers.append('ssr://{}'.format(sr_encoded))
+        servers.append('ss://{}#{}'.format(ss_encoded, host))
+        servers.append('ssr://{}'.format(sr_encoded))
 
-    ss_servers.extend(vmess_payloads)
-    return ss_servers, sr_servers
+    servers.extend(vmess_payloads)
+    return servers
 
 
-def gen_file(ss_servers, sr_servers):
+def gen_file(servers):
     print('Starting generate subcribe files...')
-    with open(shadowrocket_file, 'w') as fd:
-        fd.write(base64.b64encode('\n'.join(ss_servers).encode()).decode())
-        fd.flush()
-
-    with open(shadowsocket_file, 'w') as fd:
-        fd.write(base64.b64encode('\n'.join(sr_servers).encode()).decode())
+    with open(payloads_file, 'w') as fd:
+        fd.write(base64.b64encode('\n'.join(servers).encode()).decode())
         fd.flush()
 
 
 if __name__ == '__main__':
     ss_payloads, vmess_payloads = get_ishadow_payload()
-    ss_servers, sr_servers = builder(ss_payloads, vmess_payloads)
-    gen_file(ss_servers, sr_servers)
+    servers = builder(ss_payloads, vmess_payloads)
+    gen_file(servers)
     print("Subcribe generate done!")
-    print('Subcribe urls:')
-    print('\thttps://raw.githubusercontent.com/yushuibo/ishadow/master/shadowrocket.txt')
-    print('\thttps://raw.githubusercontent.com/yushuibo/ishadow/master/shadowsocket.txt')
