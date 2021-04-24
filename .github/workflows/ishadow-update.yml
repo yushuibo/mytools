@@ -37,6 +37,7 @@ jobs:
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "yushuibo"
           git init
+          git pull
           git add -A
           git commit -m "github action auto updated" -a
           git branch -M main
