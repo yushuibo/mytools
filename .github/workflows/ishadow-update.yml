@@ -30,7 +30,7 @@ jobs:
         run: python -u ./ishadow-util.py
       - name: commit
         run: |
-          cd fish-payload
+          cd ../fish-payload
           ls -l
           git config --global user.email "hengchen2005@gmial.com"
           git config --global user.name "fuckpy"
