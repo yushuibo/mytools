@@ -130,6 +130,7 @@ def gen_file(servers):
 
 
 if __name__ == '__main__':
+    get_sssub_payload()
     ss_payloads, vmess_payloads = get_ishadow_payload()
     servers = builder(ss_payloads, vmess_payloads)
     gen_file(servers)
