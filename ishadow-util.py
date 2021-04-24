@@ -37,7 +37,7 @@ def get_sssub_payload():
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
-            resp = requests.get(sssub_url, headers=hearders)
+            resp = requests.get(sssub_url, headers=hearders).text
         except ConnectionError:
             print("Open url failed, abort!")
             sys.exit(-1)
