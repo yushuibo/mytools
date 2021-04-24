@@ -33,7 +33,6 @@ hearders = {
 
 def get_sssub_payload():
     for path in sssub_paths:
-        hosts = []
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
@@ -43,8 +42,7 @@ def get_sssub_payload():
             sys.exit(-1)
         print("Starting parser response...")
         raw_text = base64.b64decode(resp.text.encode())
-        hosts.extend(raw_text.decode().split('\n'))
-        servers.append(hosts)
+        servers.extend(raw_text.decode().split('\n'))
 
 
 def get_ishadow_payload():
@@ -91,9 +89,7 @@ def get_ishadow_payload():
     print('Starting build base64 url...')
     for payload in ss_payloads:
         host, method, port, passwd = payload
-
         ss_raw = '{method}:{passwd}@{ip}:{port}'.format(method=method, passwd=passwd, ip=host, port=port)
-
         # a.isxb.top:19291:origin:aes-256-gcm:plain:aXN4Lnl0LTg3ODIxNzU0/?obfsparam=&group=RGVmYXVsdCBHcm91cA
         sr_raw = '{ip}:{port}:origin:{method}:palin:{passwd}/?obfsparam=&group={group}'.format(
             method=method, passwd=base64.b64encode(passwd), ip=host, port=port, group=base64.b64encode('iShadow'))
