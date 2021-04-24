@@ -18,6 +18,7 @@ import AdvancedHTMLParser
 from requests import ConnectionError
 
 servers = []
+ss_servers = []
 payloads_prefix_name = 'payloads'
 
 ishadow_url = 'https://my.ishadowx.biz/'
@@ -33,7 +34,6 @@ hearders = {
 
 def get_sssub_payload():
     for path in sssub_paths:
-        hosts = []
         sssub_url = '{}{}'.format(sssub_prefix_url, path)
         print('Try to open url {}...'.format(sssub_url))
         try:
@@ -42,9 +42,7 @@ def get_sssub_payload():
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response...")
-        raw_text = base64.b64decode(resp.text.encode())
-        hosts.extend(raw_text.decode().split('\n'))
-        servers.append(hosts)
+        servers.append(resp.text)
 
 
 def get_ishadow_payload():
@@ -115,10 +113,10 @@ def builder(ss_payloads, vmess_payloads):
         ss_encoded = base64.b64encode(ss_raw)
         sr_encoded = base64.b64encode(sr_raw)
 
-        servers[0].append('ss://{}#{}'.format(ss_encoded, host))
-        servers[1].append('ssr://{}'.format(sr_encoded))
-
-    servers.append(vmess_payloads)
+        ss_servers.append('ss://{}#{}'.format(ss_encoded, host))
+        ss_servers.append('ssr://{}'.format(sr_encoded))
+    ss_servers.extend(vmess_payloads)
+    servers.append(ss_servers)
     return servers
 
 
@@ -128,7 +126,10 @@ def gen_file(servers):
     for hosts in servers:
         hosts = filter(lambda x: x, hosts)
         with open('{}_00{}.txt'.format(payloads_prefix_name, index), 'w') as fd:
-            fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
+            if index == 5:
+                fd.write(base64.b64encode('\n'.join(hosts).encode()).decode())
+            else:
+                fd.write(hosts)
             fd.flush()
         index += 1
 
