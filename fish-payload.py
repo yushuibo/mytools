@@ -122,7 +122,7 @@ def gen_fish():
         sys.exit(-1)
     print("Starting parser response...")
     with open(gfw, 'w') as fd:
-        fd.write(resp.text)
+        fd.write(base64.b64decode(resp.text.encode()).decode())
         fd.flush
 
 
