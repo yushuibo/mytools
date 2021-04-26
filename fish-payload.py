@@ -19,7 +19,9 @@ from requests import ConnectionError
 
 servers = []
 payloads = 'payloads.txt'
+gfw = 'fish.txt'
 
+gfwlist_url = 'https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
 sssub_paths = ['ss-sub', 'ssrsub', 'trojan', 'v2ray']
@@ -111,9 +113,23 @@ def gen_file(servers):
         fd.flush()
 
 
+def gen_fish():
+    print('Try to open url {}...'.format(gfwlist_url))
+    try:
+        resp = requests.get(gfwlist_url, headers=hearders)
+    except ConnectionError:
+        print("Open url failed, abort!")
+        sys.exit(-1)
+    print("Starting parser response...")
+    with open(gfw, 'w') as fd:
+        fd.write(resp.text)
+        fd.flush
+
+
 if __name__ == '__main__':
     get_sssub_payload()
     get_ishadow_payload()
     print('All servers: {}'.format(servers))
     gen_file(servers)
+    gen_fish()
     print('Subcribe generate done!')
