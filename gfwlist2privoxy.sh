@@ -17,7 +17,7 @@ which -s privoxy &> /dev/null
 ## privoxy 配置文件, macosx
 conf='/usr/local/etc/privoxy/config'
 ## gfwlist.action 文件
-gfwlist_action='gfwlist.action'
+gfwlist_action='/tmp/gfwlist.action'
 
 ## socks5 代理地址，必须为 ip:port 形式
 socks5_proxy=$1
