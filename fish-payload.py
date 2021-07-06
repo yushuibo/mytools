@@ -42,7 +42,8 @@ def get_sssub_payload():
         except ConnectionError:
             print("Open url failed, abort!")
             sys.exit(-1)
-        print("Starting parser response...")
+        print("Starting parser response:")
+        print(resp.text)
         raw_text = base64.b64decode(resp.text.encode())
         servers.extend(raw_text.decode().split('\n'))
 
