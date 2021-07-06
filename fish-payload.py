@@ -45,6 +45,7 @@ def get_sssub_payload():
         print("Starting parser response:")
         payload_raw = resp.text
         print(payload_raw)
+        # Fixed: binascii.Error: Incorrect padding
         missing_padding = 4 - len(payload_raw) % 4
         if missing_padding:
             payload_raw += '=' * missing_padding
