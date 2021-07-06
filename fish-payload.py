@@ -24,7 +24,7 @@ gfw = 'fish.txt'
 gfwlist_url = 'https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
 ishadow_url = 'https://my.ishadowx.biz/'
 sssub_prefix_url = 'https://raw.githubusercontent.com/ssrsub/ssr/master/'
-sssub_paths = ['ss-sub', 'ssrsub', 'trojan', 'v2ray']
+sssub_paths = ['ss-sub', 'ssrsub', 'trojan', 'V2Ray']
 
 hearders = {
     "User-Agent":
@@ -43,8 +43,12 @@ def get_sssub_payload():
             print("Open url failed, abort!")
             sys.exit(-1)
         print("Starting parser response:")
-        print(resp.text)
-        raw_text = base64.b64decode(resp.text.encode())
+        payload_raw = resp.text
+        print(payload_raw)
+        missing_padding = 4 - len(payload_raw) % 4
+        if missing_padding:
+            payload_raw += '=' * missing_padding
+        raw_text = base64.b64decode(payload_raw.encode())
         servers.extend(raw_text.decode().split('\n'))
 
 
